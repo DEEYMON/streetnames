@@ -1,5 +1,6 @@
 StreetNames = StreetNames or {}
 StreetNames.Streets = StreetNames.Streets or {}
+StreetNames.StreetsInt = StreetNames.StreetsInt or {}
 StreetNames.StreetColors = StreetNames.StreetColors or {}
 StreetNames.AddStreetFrame = {}
 
@@ -33,7 +34,19 @@ end
 
 net.Receive("StreetNames:CreateStreet", function(len)
     local data = net.ReadTable()
+    local dataInt = net.ReadTable()
     StreetNames.Streets = data
+    StreetNames.StreetsInt = dataInt
+end)
+
+net.Receive("StreetNames:SendEntity", function(len)
+    local route = net.ReadUInt(16)
+    route = StreetNames.StreetsInt[route] and StreetNames.StreetsInt[route] or "Unknown"
+
+    local last = lastIntersection
+    lastIntersection = lastStreet
+    lastStreet = route
+    if lastIntersection == lastStreet then lastIntersection = last end
 end)
 
 streetTable = {}
@@ -244,16 +257,6 @@ end
 
 hook.Add("HUDPaint", "SteetNames:HUDPaint", function()
     local ply = LocalPlayer()
-    for streetname,routes in pairs(StreetNames.Streets) do
-        for _,streets in pairs(routes) do
-            if ply:GetPos():WithinAABox(streets.vec1, streets.vec2) then
-                local last = lastIntersection
-                lastIntersection = lastStreet
-                lastStreet = streetname
-                if lastIntersection == lastStreet then lastIntersection = last end
-            end
-        end
-    end
 
     if not IsValid(streetHud) then StreetNames:CreateHUD() end
     streetHud:PaintManual()
