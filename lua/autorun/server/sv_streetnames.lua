@@ -12,6 +12,12 @@ end
 local streetTableCache = false
 local intTable = {}
 
+local mt_Player = FindMetaTable( "Player" )
+
+function mt_Player:GetCurrentRoad()
+  return self.tRoads and self.tRoads[ #self.tRoads ] or false
+end
+
 local function createStreetEnt()
 
     local str = file.Read("streetnames/"..game.GetMap()..".txt", "DATA")
@@ -39,9 +45,42 @@ local function createStreetEnt()
             function route:StartTouch( eEnt )
                 if not IsValid(eEnt) then return end
                 if not eEnt:IsPlayer() then return end
+
+                local routeID = route:GetRouteID()
                 net.Start("StreetNames:SendEntity")
-                net.WriteUInt(route:GetRouteID(), 16)
+                net.WriteUInt(routeID, 16)
                 net.Send(eEnt)
+
+                eEnt.tRoads = eEnt.tRoads or {}
+                eEnt.tRoads[ #eEnt.tRoads + 1 ] = self
+
+            end
+
+            function route:EndTouch( eEnt )
+                if not eEnt:IsPlayer() or not eEnt.tRoads then return end
+                
+                for k, v in ipairs( eEnt.tRoads ) do
+                    if v == self then
+                      eEnt.tRoads[ k ] = nil
+                      break
+                    end
+                  end
+                
+                eEnt.tRoads = table.ClearKeys( eEnt.tRoads )
+                if ( #eEnt.tRoads == 0 ) then
+                    eEnt.tRoads = nil
+                end
+
+                local road = eEnt:GetCurrentRoad()
+                if not road or not IsValid(road) then return end
+
+                local routeID = road:GetRouteID()
+                
+
+                net.Start("StreetNames:SendEntity")
+                net.WriteUInt(routeID, 16)
+                net.Send(eEnt)
+
             end
 
         end
