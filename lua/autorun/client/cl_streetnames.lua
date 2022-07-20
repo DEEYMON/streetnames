@@ -236,7 +236,9 @@ function StreetNames:CreateHUD()
     streetHud:SetPaintedManually(true)
     function streetHud:Paint(w,h)
 
-        facing = ( EyeAngles()[2] <= 45 and EyeAngles()[2] >= -45 ) and "N" or ( EyeAngles()[2] >= 45.001 and EyeAngles()[2] <= 135 ) and "W" or ( EyeAngles()[2] >= 135.001 or EyeAngles()[2] <= -135 ) and "S" or ( EyeAngles()[2] >= -135.001 and EyeAngles()[2] <= -45.001 ) and "E"
+        local eyeang = EyeAngles()[2]
+
+        facing = ( eyeang <= 45 and eyeang >= -45 ) and "N" or ( eyeang >= 45.001 and eyeang <= 135 ) and "W" or ( eyeang >= 135.001 or eyeang <= -135 ) and "S" or ( eyeang >= -135.001 and eyeang <= -45.001 ) and "E"
 
         surface.SetDrawColor(100,100,100,150)
         surface.DrawRect(0,0,w*0.015,h)
