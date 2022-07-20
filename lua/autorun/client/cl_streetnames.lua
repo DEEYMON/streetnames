@@ -235,9 +235,7 @@ function StreetNames:CreateHUD()
     streetHud:SetPos(ScrW() * .15, ScrH() * .96)
     streetHud:SetPaintedManually(true)
     function streetHud:Paint(w,h)
-
         local eyeang = EyeAngles()[2]
-
         facing = ( eyeang <= 45 and eyeang >= -45 ) and "N" or ( eyeang >= 45.001 and eyeang <= 135 ) and "W" or ( eyeang >= 135.001 or eyeang <= -135 ) and "S" or ( eyeang >= -135.001 and eyeang <= -45.001 ) and "E"
 
         surface.SetDrawColor(100,100,100,150)
@@ -266,10 +264,8 @@ hook.Add("HUDPaint", "SteetNames:HUDPaint", function()
     if StreetNames.ShowStreets then
         local i = 1
         for streetname,routes in pairs(StreetNames.Streets) do
-            for _,streets in pairs(routes) do
-                local r,g,b,a = StreetNames.ColorList[i] and StreetNames.ColorList[i] or Color(255,255,255,100)
-                draw.SimpleText(streetname,"DermaDefault",0,ScrH() * .01 * i, StreetNames.ColorList[i])
-            end
+            local col = StreetNames.ColorList[i] and StreetNames.ColorList[i] or Color(255,255,255,255)
+            draw.SimpleText(streetname,"DermaDefault",0,ScrH() * .01 * i, col)
             i = i + 1
         end
     end

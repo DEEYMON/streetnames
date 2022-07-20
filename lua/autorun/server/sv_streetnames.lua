@@ -121,11 +121,11 @@ hook.Add("PlayerSpawn", "StreetNames:PS", function(ply)
     net.Send(ply)
 end)
 
-
-
-createStreetEnt()
-
 hook.Add("OnGamemodeLoaded", "StreetNames:OGL", function()
     createStreetEnt()
     hook.Remove("OnGamemodeLoaded", "StreetNames:OGL")
+end)
+
+hook.Add("PostCleanupMap", "StreetNames:Postcleanup", function()
+    createStreetEnt()
 end)
