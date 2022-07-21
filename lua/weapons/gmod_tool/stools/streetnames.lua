@@ -183,5 +183,5 @@ end
 
 function TOOL.BuildCPanel( panel, nope )
     panel:Button( "Street admin panel", "streetnames_admin" )
-
+    panel:Button( "Reload streets", "streetnames_reloadstreets" )
 end

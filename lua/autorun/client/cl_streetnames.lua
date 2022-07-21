@@ -359,3 +359,10 @@ concommand.Add("streetnames_admin", function(ply)
     
     StreetNames:AdminPanel()
 end)
+
+concommand.Add("streetnames_reloadstreets", function(ply)
+    if not ply:IsSuperAdmin() then return chat.AddText(Color(255,255,255), "You cannot use this command!") end
+    
+    net.Start("StreetNames:ReloadStreets")
+    net.SendToServer()
+end)

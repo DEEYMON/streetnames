@@ -1,6 +1,7 @@
 util.AddNetworkString("StreetNames:CreateStreet")
 util.AddNetworkString("StreetNames:DeleteStreet")
 util.AddNetworkString("StreetNames:SendEntity")
+util.AddNetworkString("StreetNames:ReloadStreets")
 
 if not file.IsDir("streetnames","DATA") then
     file.CreateDir("streetnames")
@@ -144,6 +145,22 @@ net.Receive("StreetNames:DeleteStreet", function(len,ply)
     net.WriteTable(intTable)
     net.Broadcast()
     
+end)
+
+net.Receive("StreetNames:ReloadStreets", function(len,ply)
+
+    if not ply:IsSuperAdmin() then return end
+
+    local str = file.Read("streetnames/"..game.GetMap()..".txt", "DATA")
+    local dataTable = util.JSONToTable(str and str or "{}")
+    streetTableCache = dataTable
+
+    createStreetEnt()
+
+    net.Start("StreetNames:CreateStreet")
+    net.WriteTable(streetTableCache)
+    net.WriteTable(intTable)
+    net.Broadcast()
 end)
 
 hook.Add("PlayerSpawn", "StreetNames:PS", function(ply)
