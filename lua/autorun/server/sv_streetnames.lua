@@ -13,12 +13,6 @@ end
 local streetTableCache = false
 local intTable = {}
 
-local mt_Player = FindMetaTable( "Player" )
-
-function mt_Player:GetCurrentRoad()
-  return self.tRoads and self.tRoads[ #self.tRoads ] or false
-end
-
 local function createStreetEnt()
 
     local str = file.Read("streetnames/"..game.GetMap()..".txt", "DATA")
@@ -42,6 +36,7 @@ local function createStreetEnt()
             route:Spawn()
             route:SetCollisionBoundsWS(streets.vec1, streets.vec2)
             route:SetRouteID(i)
+            route:SetRouteName(intTable[i] and intTable[i] or "Unknown")
 
             function route:StartTouch( eEnt )
                 if not IsValid(eEnt) then return end

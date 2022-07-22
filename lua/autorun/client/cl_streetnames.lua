@@ -2,6 +2,7 @@ StreetNames = StreetNames or {}
 StreetNames.Streets = StreetNames.Streets or {}
 StreetNames.StreetsInt = StreetNames.StreetsInt or {}
 StreetNames.StreetColors = StreetNames.StreetColors or {}
+StreetNames.CurrentStreet = false
 StreetNames.AddStreetFrame = {}
 
 StreetNames.IsAdding = false
@@ -47,6 +48,7 @@ net.Receive("StreetNames:SendEntity", function(len)
     lastIntersection = lastStreet
     lastStreet = route
     if lastIntersection == lastStreet then lastIntersection = last end
+    StreetNames.CurrentStreet = lastStreet
 end)
 
 streetTable = {}
